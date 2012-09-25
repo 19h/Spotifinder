@@ -1,0 +1,135 @@
+<html>
+        
+        <head>
+                <title>Spotifinder</title>
+                <meta charset="utf-8" />
+                <script type="text/javascript" src="/proto"></script>
+        </head>
+        
+        <body>
+                <center>
+                        <input id="fuck" type="text" style="border: 2px dashed #D1C7AC;width: 230px; line-height: 20px; text-align: center; font-size:17;"
+                        value="Songname" />
+                </center>
+                <hr/>
+                <div id="desc" style="font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;text-shadow: 0px 0px 1px #555;font-weight:bold;">
+                        <center>Just klick a song to listen to it using Spotify!</center>
+                </div>
+                <hr/>
+                <div id="content" style="font-family: 'lucida grande',tahoma,verdana,arial,sans-serif;text-shadow: 0px 0px 1px #555;font-weight:bold;"></div>
+        </body>
+        <script type="text/javascript">
+                rsrch = function (b, f) {
+                        new Ajax.Request("/track/" + b, {
+                                method: "get",
+                                onComplete: function (a) {
+                                        return f(a.responseText)
+                                }
+                        })
+                };
+                old = void 0;
+                update = function () {
+                        x = this;
+                        old != this.value && ((document.title = this
+                                .value + " on Spotifinder"), window.history
+                                .pushState({
+                                foo: "foo"
+                        }, this.value + " on Spotifinder", "/" + b64e(this.value)));
+                        old = this.value;
+                        return rsrch(x.value, function (b) {
+                                $("content").update(b)
+                        })
+                };
+                cl = !1;
+                $("fuck").onclick = function () {
+                        if (cl && "Songname" != this.value) return !1;
+                        cl = !0;
+                        this.value = ""
+                };
+                $("fuck").onkeyup = update;
+                $("fuck").onblur = function () {
+                        "" == this.value && (this.value = "Songname")
+                };
+                b64d = function (b, f) {
+                        if (void 0 != f && f) return /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/.test(b);
+                        var a;
+                        a = b;
+                        var d, h, g, k, c, i = 0,
+                                e = 0,
+                                j = [];
+                        if (a) {
+                                a += "";
+                                do d = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".indexOf(a.charAt(i++)), h = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .indexOf(a.charAt(i++)), k = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .indexOf(a.charAt(i++)), c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .indexOf(a.charAt(i++)),
+                                g = d << 18 | h << 12 | k << 6 | c, d = g >> 16 & 255, h = g >> 8 & 255, g &= 255, 64 == k ? j[e++] = String.fromCharCode(d) : 64 == c ? j[e++] = String
+                                        .fromCharCode(d, h) : j[e++] = String
+                                        .fromCharCode(d, h, g);
+                                while (i < a.length);
+                                a = j.join("");
+                                k = [];
+                                d = j = e = i = c = 0;
+                                for (a += ""; c < a.length;) e = a.charCodeAt(c), 128 > e ? (k[i++] = String.fromCharCode(e), c++) : 191 < e && 224 > e ? (j = a.charCodeAt(c + 1), k[i++] = String
+                                        .fromCharCode((e & 31) << 6 | j & 63), c += 2) : (j = a.charCodeAt(c + 1), d = a
+                                        .charCodeAt(c + 2), k[i++] = String
+                                        .fromCharCode((e & 15) << 12 | (j & 63) << 6 | d & 63), c += 3);
+                                a = k.join("")
+                        }
+                        return a
+                };
+                b64e = function (b) {
+                        var f, a, d, h, g, k = f = 0,
+                                c = "",
+                                c = [];
+                        if (b) {
+                                b += "";
+                                if (null === b || "undefined" === typeof b) b = "";
+                                else {
+                                        b += "";
+                                        a = "";
+                                        d = h = 0;
+                                        g = b.length;
+                                        for (var i = 0; i < g; i++) {
+                                                var e = b.charCodeAt(i),
+                                                        j = null;
+                                                128 > e ? h++ : j = 127 < e && 2048 > e ? String.fromCharCode(e >> 6 | 192) + String
+                                                        .fromCharCode(e & 63 | 128) : String
+                                                        .fromCharCode(e >> 12 | 224) + String
+                                                        .fromCharCode(e >> 6 & 63 | 128) + String
+                                                        .fromCharCode(e & 63 | 128);
+                                                null !== j && (h > d && (a += b.slice(d, h)), a += j, d = h = i + 1)
+                                        }
+                                        h > d && (a += b.slice(d, g));
+                                        b = a
+                                }
+                                do a = b.charCodeAt(f++), d = b
+                                        .charCodeAt(f++), h = b
+                                        .charCodeAt(f++),
+                                g = a << 16 | d << 8 | h, a = g >> 18 & 63, d = g >> 12 & 63, h = g >> 6 & 63, g &= 63, c[k++] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=".charAt(a) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .charAt(d) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .charAt(h) + "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/="
+                                        .charAt(g);
+                                while (f < b.length);
+                                c = c.join("");
+                                f = b.length % 3;
+                                f = (f ? c.slice(0, f - 3) : c) + "===".slice(f || 3)
+                        } else f = b;
+                        return f
+                };
+                _prepare = function (b) {
+                        if (/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$/.test(b)) {
+                                $("fuck").value = b64d(b);
+                                update.call({
+                                        value: b64d(b)
+                                })
+                        } else {
+                                $("fuck").value = b;
+                                update.call({
+                                        value: b
+                                })
+                        }
+                };
+        </script>
+
+</html>
